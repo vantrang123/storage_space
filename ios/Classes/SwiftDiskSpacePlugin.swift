@@ -26,15 +26,15 @@ public class SwiftDiskSpacePlugin: NSObject, FlutterPlugin {
 
 extension UIDevice {
     var totalDiskSpaceInGB:Double {
-        return Double(convert(totalDiskSpaceInBytes))!
+        return Double(convert(totalDiskSpaceInBytes)) ?? 0
     }
     
     var freeDiskSpaceInGB:Double {
-        return Double(convert(freeDiskSpaceInBytes))!
+        return Double(convert(freeDiskSpaceInBytes)) ?? 0
     }
     
     var usedDiskSpaceInMB:Double {
-        return Double(convert(usedDiskSpaceInBytes))!
+        return Double(convert(usedDiskSpaceInBytes)) ?? 0
     }
     
     public func freeDiskSpaceForPathInMB(path: String) -> Double {
