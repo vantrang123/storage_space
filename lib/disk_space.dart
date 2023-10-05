@@ -11,23 +11,35 @@ class DiskSpace {
     return version;
   }
 
-  static Future<double?> get getFreeDiskSpace async {
-    final double? freeDiskSpace =
+  static Future<String?> get getFreeDiskSpace async {
+    final String? freeDiskSpace =
         await _channel.invokeMethod('getFreeDiskSpace');
     return freeDiskSpace;
   }
 
-  static Future<double?> get getTotalDiskSpace async {
-    final double? totalDiskSpace =
+  static Future<String?> get getTotalDiskSpace async {
+    final String? totalDiskSpace =
         await _channel.invokeMethod('getTotalDiskSpace');
     return totalDiskSpace;
   }
 
-  static Future<double?> getFreeDiskSpaceForPath(String path) async {
+  static Future<String?> get getUsedDiskSpace async {
+    final String? data =
+    await _channel.invokeMethod('getUsedDiskSpace');
+    return data;
+  }
+
+  static Future<String?> get getPercentageUsedDiskSpace async {
+    final String? data =
+    await _channel.invokeMethod('getPercentageUsedDiskSpace');
+    return data;
+  }
+
+  static Future<String?> getFreeDiskSpaceForPath(String path) async {
     if (!Directory(path).existsSync()) {
       throw Exception("Specified path does not exist");
     }
-    final double? freeDiskSpace =
+    final String? freeDiskSpace =
         await _channel.invokeMethod('getFreeDiskSpaceForPath', {"path": path});
     return freeDiskSpace;
   }

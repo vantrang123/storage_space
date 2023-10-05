@@ -14,6 +14,10 @@ public class SwiftDiskSpacePlugin: NSObject, FlutterPlugin {
             result(UIDevice.current.freeDiskSpaceInGB)
         case "getTotalDiskSpace":
             result(UIDevice.current.totalDiskSpaceInGB)
+        case "getUsedDiskSpace":
+             result(UIDevice.current.usedDiskSpaceInGB)
+         case "getPercentageUsedDiskSpace":
+               result(UIDevice.current.percentageUsed)
         case "getFreeDiskSpaceForPath":
             result(UIDevice.current.freeDiskSpaceForPathInMB(path: (call.arguments as? [String: String])!["path"]!))
         default:
@@ -25,20 +29,26 @@ public class SwiftDiskSpacePlugin: NSObject, FlutterPlugin {
 }
 
 extension UIDevice {
-    var totalDiskSpaceInGB:Double {
-        return Double(convert(totalDiskSpaceInBytes)) ?? 0
+    var totalDiskSpaceInGB:String {
+        return convert(totalDiskSpaceInBytes)
     }
     
-    var freeDiskSpaceInGB:Double {
-        return Double(convert(freeDiskSpaceInBytes)) ?? 0
+    var freeDiskSpaceInGB:String {
+        return convert(freeDiskSpaceInBytes)
     }
     
-    var usedDiskSpaceInMB:Double {
-        return Double(convert(usedDiskSpaceInBytes)) ?? 0
+    var usedDiskSpaceInGB:String {
+        return convert(usedDiskSpaceInBytes)
+    }
+
+    var percentageUsed:String {
+        let roundedPercentage = Int((usedDiskSpaceInBytes / totalDiskSpaceInBytes) * 100).rounded()
+        return "\(roundedPercentage)%"
     }
     
-    public func freeDiskSpaceForPathInMB(path: String) -> Double {
-        return Double(freeDiskSpaceForPathInBytes(path: path) / (1024 * 1024))
+    public func freeDiskSpaceForPathInMB(path: String) -> String {
+//         return Double(freeDiskSpaceForPathInBytes(path: path) / (1024 * 1024))
+        return ""
     }
     
     
