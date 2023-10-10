@@ -43,7 +43,7 @@ extension UIDevice {
 
     var percentageUsed:String {
         let roundedPercentage = Double(usedDiskSpaceInBytes) / Double(totalDiskSpaceInBytes)
-        let formattedPercentage = String(format: "%.1f", roundedPercentage * 100)
+        let formattedPercentage = String(format: "%.0f", roundedPercentage * 100)
         return formattedPercentage
     }
     
