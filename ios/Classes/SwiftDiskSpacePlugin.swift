@@ -73,15 +73,24 @@ extension UIDevice {
      This value should not be used in determining if there is room for an irreplaceable resource. In the case of irreplaceable resources, always attempt to save the resource regardless of available capacity and handle failure as gracefully as possible.
      */
     var freeDiskSpaceInBytes:Int64 {
-        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        if let dictionary = try? FileManager.default.attributesOfFileSystem(forPath: paths.last!) {
-            if let freeSize = dictionary[FileAttributeKey.systemFreeSize] as? NSNumber {
-                return freeSize.int64Value
+        let url = URL(fileURLWithPath: NSHomeDirectory())
+        if #available(iOS 11.0, *) {
+            if let url = URL(fileURLWithPath: NSHomeDirectory()) as URL? {
+                if let space = try? url.resourceValues(forKeys: [URLResourceKey.volumeAvailableCapacityForImportantUsageKey]).volumeAvailableCapacityForImportantUsage {
+                    return space ?? 0
+                } else {
+                    return 0
+                }
             }
-        }else{
-            print("Error Obtaining System Memory Info:")
+            return 0
+        } else {
+            if let systemAttributes = try? FileManager.default.attributesOfFileSystem(forPath: NSHomeDirectory() as String),
+               let freeSpace = (systemAttributes[FileAttributeKey.systemFreeSize] as? NSNumber)?.int64Value {
+                return freeSpace
+            } else {
+                return 0
+            }
         }
-        return 0
     }
     
     var usedDiskSpaceInBytes:Int64 {
