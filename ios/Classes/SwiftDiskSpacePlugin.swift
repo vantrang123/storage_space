@@ -30,15 +30,15 @@ public class SwiftDiskSpacePlugin: NSObject, FlutterPlugin {
 
 extension UIDevice {
     var totalDiskSpaceInGB:String {
-        return convert(totalDiskSpaceInBytes)
+        return String(format: "%0.0f GB", convertToFloat(convert(totalDiskSpaceInBytes)))
     }
     
     var freeDiskSpaceInGB:String {
-        return convert(freeDiskSpaceInBytes)
+        return String(format: "%0.0f GB", convertToFloat(convert(freeDiskSpaceInBytes)))
     }
     
     var usedDiskSpaceInGB:String {
-        return convert(usedDiskSpaceInBytes)
+        return String(format: "%0.0f GB", convertToFloat(convert(usedDiskSpaceInBytes)))
     }
 
     var percentageUsed:String {
@@ -115,6 +115,16 @@ extension UIDevice {
             return formatter.string(fromByteCount: bytes)
         } else {
             return "0"
+        }
+    }
+
+    private func convertToFloat(_ inputString: String) -> Float {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        if let number = numberFormatter.number(from: inputString) {
+            return number.floatValue
+        } else {
+            return 0
         }
     }
     
