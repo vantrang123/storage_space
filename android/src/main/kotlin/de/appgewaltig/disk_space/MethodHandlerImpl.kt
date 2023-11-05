@@ -69,8 +69,8 @@ class MethodHandlerImpl : MethodChannel.MethodCallHandler {
     }
 
     private fun getPercentageUsedDiskSpace(): String {
-        val used = totalDiskSpace.toDouble() - freeDiskSpace.toDouble()
-
-        return ceil((used / totalDiskSpace.toDouble()) * 100).toInt().toString()
+        val used = totalDiskSpace.toFloat() - freeDiskSpace.toFloat()
+        val percent = ((used / totalDiskSpace.toFloat()) * 100)
+        return String.format("%.0f", percent)
     }
 }
