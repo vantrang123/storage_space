@@ -7,6 +7,8 @@ import io.flutter.plugin.common.MethodChannel
 import kotlin.math.ceil
 
 class MethodHandlerImpl : MethodChannel.MethodCallHandler {
+    var totalDiskSpace = 0
+    var freeDiskSpace = 0
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when(call.method) {
             "getFreeDiskSpace" -> result.success(getFreeDiskSpace())
@@ -30,7 +32,8 @@ class MethodHandlerImpl : MethodChannel.MethodCallHandler {
     }
 
     private fun getFreeDiskSpace(): String {
-        return getFreeDiskSpaceGB().toString()
+        freeDiskSpace = getFreeDiskSpaceGB()
+        return freeDiskSpace.toString()
     }
 
     private fun getFreeDiskSpaceForPath(path: String): String {
@@ -57,14 +60,17 @@ class MethodHandlerImpl : MethodChannel.MethodCallHandler {
     }
 
     private fun getTotalDiskSpace(): String {
-        return getTotalDiskSpaceGB().toString()
+        totalDiskSpace = getTotalDiskSpaceGB()
+        return totalDiskSpace.toString()
     }
 
     private fun getUsedDiskSpace(): String {
-        return (getTotalDiskSpaceGB() - getFreeDiskSpaceGB()).toString()
+        return (totalDiskSpace - freeDiskSpace).toString()
     }
 
     private fun getPercentageUsedDiskSpace(): String {
-        return (((getTotalDiskSpaceGB() - getFreeDiskSpaceGB()) / getTotalDiskSpaceGB()) * 100).toString()
+        val used = totalDiskSpace.toDouble() - freeDiskSpace.toDouble()
+
+        return ceil((used / totalDiskSpace.toDouble()) * 100).toInt().toString()
     }
 }
