@@ -28,10 +28,10 @@ class _MyAppState extends State<MyApp> {
     double diskSpace = 0;
 
     // diskSpace = (await DiskSpace.getFreeDiskSpace)!;
-    print('XXX ${await DiskSpace.getFreeDiskSpace}');
-    print('XXX ${await DiskSpace.getTotalDiskSpace}');
-    print('XXX ${await DiskSpace.getUsedDiskSpace}');
-    print('XXX ${await DiskSpace.getPercentageUsedDiskSpace}');
+    print('getFreeDiskSpace ${await DiskSpace.getFreeDiskSpace}');
+    print('getTotalDiskSpace ${await DiskSpace.getTotalDiskSpace}');
+    print('getUsedDiskSpace ${await DiskSpace.getUsedDiskSpace}');
+    print('getPercentageUsedDiskSpace ${await DiskSpace.getPercentageUsedDiskSpace}');
 
     List<Directory> directories = [];
     Map<Directory, double> directorySpace = {};

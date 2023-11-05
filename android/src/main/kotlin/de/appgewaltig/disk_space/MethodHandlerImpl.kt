@@ -4,18 +4,21 @@ import android.os.Environment
 import android.os.StatFs
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import kotlin.math.ceil
 
 class MethodHandlerImpl : MethodChannel.MethodCallHandler {
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when(call.method) {
             "getFreeDiskSpace" -> result.success(getFreeDiskSpace())
             "getTotalDiskSpace" -> result.success(getTotalDiskSpace())
+            "getUsedDiskSpace" -> result.success(getUsedDiskSpace())
+            "getPercentageUsedDiskSpace" -> result.success(getPercentageUsedDiskSpace())
             "getFreeDiskSpaceForPath" -> result.success(getFreeDiskSpaceForPath(call.argument<String>("path")!!))
             else -> result.notImplemented()
         }
     }
 
-    private fun getFreeDiskSpace(): Double {
+    private fun getFreeDiskSpaceGB(): Int {
         val stat = StatFs(Environment.getExternalStorageDirectory().path)
 
         val bytesAvailable: Long
@@ -23,10 +26,14 @@ class MethodHandlerImpl : MethodChannel.MethodCallHandler {
             stat.blockSizeLong * stat.availableBlocksLong
         else
             stat.blockSize.toLong() * stat.availableBlocks.toLong()
-        return (bytesAvailable / (1024f * 1024f)).toDouble()
+        return ceil((bytesAvailable / (1024f * 1024f * 1024f))).toInt()
     }
 
-    private fun getFreeDiskSpaceForPath(path: String): Double {
+    private fun getFreeDiskSpace(): String {
+        return getFreeDiskSpaceGB().toString()
+    }
+
+    private fun getFreeDiskSpaceForPath(path: String): String {
         val stat = StatFs(path)
     
         val bytesAvailable: Long
@@ -34,10 +41,10 @@ class MethodHandlerImpl : MethodChannel.MethodCallHandler {
             stat.blockSizeLong * stat.availableBlocksLong
         else
             stat.blockSize.toLong() * stat.availableBlocks.toLong()
-        return (bytesAvailable / (1024f * 1024f)).toDouble()
+        return (bytesAvailable / (1024f * 1024f)).toString()
     }
 
-    private fun getTotalDiskSpace(): Double {
+    private fun getTotalDiskSpaceGB(): Int {
         val stat = StatFs(Environment.getExternalStorageDirectory().path)
 
         val bytesAvailable: Long
@@ -45,6 +52,19 @@ class MethodHandlerImpl : MethodChannel.MethodCallHandler {
             stat.blockSizeLong * stat.blockCountLong
         else
             stat.blockSize.toLong() * stat.blockCount.toLong()
-        return (bytesAvailable / (1024f * 1024f)).toDouble()
+
+        return ceil((bytesAvailable / (1024f * 1024f * 1024f))).toInt()
+    }
+
+    private fun getTotalDiskSpace(): String {
+        return getTotalDiskSpaceGB().toString()
+    }
+
+    private fun getUsedDiskSpace(): String {
+        return (getTotalDiskSpaceGB() - getFreeDiskSpaceGB()).toString()
+    }
+
+    private fun getPercentageUsedDiskSpace(): String {
+        return (((getTotalDiskSpaceGB() - getFreeDiskSpaceGB()) / getTotalDiskSpaceGB()) * 100).toString()
     }
 }
